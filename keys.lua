@@ -8,7 +8,7 @@ root.buttons(gears.table.join(
     awful.button({ }, 5, awful.tag.viewprev)
 ))
 
-function screenshot() awful.spawn("flameshot gui") end
+function screenshot() awful.util.spawn_with_shell("maim -s -u | xclip -selection clipboard -t image/png -i") end
 function focus_next() awful.client.focus.byidx( 1) end
 function focus_previous() awful.client.focus.byidx(-1) end
 function swap_next() awful.client.swap.byidx(  1)    end
@@ -75,14 +75,14 @@ function brightness_down()
     awesome.emit_signal("widgets::brightnesschange")
 end
 
--- Criação da tabela global 
+-- Criação da tabela global
 
 globalkeys = gears.table.join(
     awful.key({                   }, "XF86AudioLowerVolume", volume_down),
     awful.key({                   }, "XF86AudioRaiseVolume", volume_up),
     awful.key({                   }, "XF86MonBrightnessDown", brightness_down),
     awful.key({                   }, "XF86MonBrightnessUp", brightness_up),
-    awful.key({                   }, "Print", screenshot),
+    awful.key({                   }, "Print",  screenshot),
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help, {description="show help", group="awesome"}),
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev, {description = "view previous", group = "tag"}),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext, {description = "view next", group = "tag"}),
@@ -122,22 +122,22 @@ function move_to_master(c) c:swap(awful.client.getmaster()) end
 function move_to_screen(c) c:move_to_screen() end
 function keep_on_top(c) c.ontop = not c.ontop end
 
-function minimize(c) c.minimized = true end 
+function minimize(c) c.minimized = true end
 
 function maximize(c)
     c.maximized = not c.maximized
     c:raise()
-end 
+end
 function maximize_vertically(c)
     c.maximized_vertical = not c.maximized_vertical
     c:raise()
-end 
+end
 
 
 function maximize_horizontally(c)
     c.maximized_horizontal = not c.maximized_horizontal
     c:raise()
-end 
+end
 
 function toogle_fullscreen(c)
     c.fullscreen = not c.fullscreen

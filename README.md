@@ -1,5 +1,10 @@
-<h1 align="center"> UwU</h1><br>
-<p align="center"> Just a simple awesome config to make my desktop awesome </p><br>
+<h1 align="center"> UwU</h1>
+<br>
+<h2 align="center"> Just a simple awesome config to make my desktop awesome</h2>
+<br>
 
-<img src="https://i.imgur.com/aCMTlSO.png" align="center"/>
-<img src="https://i.imgur.com/PQ667O0.png" align="center"/>
+### 🔧 Requirements:
+  - `maim` and `xclip`: Used for screenshots
+  - `picom`: Compositor, auto started by the theme
+
+> The theme may misbehave if you don't have those programs installed.

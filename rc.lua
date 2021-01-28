@@ -14,10 +14,18 @@ hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.autofocus")
 require("awful.hotkeys_popup.keys")
 
--- Error handling 
+-- Configurações padrões do usuário
+terminal = "kitty"
+editor = os.getenv("EDITOR") or "vim"
+modkey = "Mod4"
 
+-- Error handling
 if awesome.startup_errors then
-    naughty.notify({ preset = naughty.config.presets.critical, title = "Oops, there were errors during startup!", text = awesome.startup_errors })
+    naughty.notify({
+      preset = naughty.config.presets.critical,
+      title = "Oops, there were errors during startup!",
+      text = awesome.startup_errors
+    })
 end
 
 local in_error = false
@@ -25,19 +33,17 @@ local in_error = false
 awesome.connect_signal("debug::error", function (err)
   if in_error then return end
   in_error = true
-  naughty.notify({ preset = naughty.config.presets.critical, title = "Oops, an error happened!", text = tostring(err) })
+  naughty.notify({
+    preset = naughty.config.presets.critical,
+    title = "Oops, an error happened!",
+    text = tostring(err)
+  })
   in_error = false
 end)
 
 -- Carrega o tema do "beautiful"
 actual_dir = os.getenv("HOME") .. "/.config/awesome/"
 beautiful.init(actual_dir .. "/theme.lua")
-
--- Configurações padrões do usuário
-terminal = "kitty"
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
-modkey = "Mod4"
 
 awful.layout.layouts = {
     awful.layout.suit.spiral,
@@ -55,31 +61,32 @@ awful.layout.layouts = {
 }
 
 -- Inicia os módulos
+require("utils")
 require("screen")
 require("keys")
-require("widgets")
 
 -- Algumas outras configurações
 menubar.utils.terminal = terminal
-mykeyboardlayout = awful.widget.keyboardlayout()
 root.keys(globalkeys)
 
--- Regras das janelas que vão ser criadas 
+-- Regras das janelas que vão ser criadas
 awful.rules.rules = {
     { rule = { },
-      properties = { border_width = beautiful.border_width,
-                     border_color = beautiful.border_normal,
-                     focus = awful.client.focus.filter,
-                     raise = true,
-                     keys = clientkeys,
-                     buttons = clientbuttons,
-                     screen = awful.screen.preferred,
-                     placement = awful.placement.no_overlap+awful.placement.no_offscreen}
+      properties = {
+        border_width = beautiful.border_width,
+        border_color = beautiful.border_normal,
+        focus = awful.client.focus.filter,
+        raise = true,
+        keys = clientkeys,
+        buttons = clientbuttons,
+        screen = awful.screen.preferred,
+        placement = awful.placement.no_overlap + awful.placement.no_offscreen
+      }
     },
     { rule_any = {
         instance = {
           "DTA",
-          "copyq", 
+          "copyq",
           "pinentry",
         },
         class = {
@@ -87,24 +94,23 @@ awful.rules.rules = {
           "Tor Browser",
           "Wpa_gui",
           "veromix",
-          "xtightvncviewer"},
+          "xtightvncviewer"
+        },
         name = {
-          "Event Tester",  
+          "Event Tester"
         },
         role = {
           "AlarmWindow",
           "ConfigManager",
-          "pop-up",   
+          "pop-up",
         }
-      }, properties = { floating = true }},
-    -- Regra para 3 aplicações serem criadas em janelas distintas.
-    { rule = { class = "firefox" }, properties = { screen = 1, tag = "3" } },
-    { rule = { class = "discord" }, properties = { screen = 1, tag = "2" } },
-    { rule = { class = "Code" }, properties = { screen = 1, tag = "1" } },
+      },
+      properties = { floating = true }
+    },
 }
 
 -- Faz as janelas que estão fora do awesomeWM voltarem pra tela.
-client.connect_signal("manage", function (c)
+client.connect_signal("manage", function(c)
     if awesome.startup
       and not c.size_hints.user_position
       and not c.size_hints.program_position then
@@ -116,10 +122,14 @@ end)
 client.connect_signal("mouse::enter", function(c)
     c:emit_signal("request::activate", "mouse_enter", {raise = false})
 end)
- 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 
+client.connect_signal("focus", function(c)
+   c.border_color = beautiful.border_focus
+end)
+
+client.connect_signal("unfocus", function(c)
+  c.border_color = beautiful.border_normal
+end)
 
 -- Inicia o compositor
-awful.spawn.easy_async_with_shell("picom --conf $HOME/.config/picom.conf", function(out) end)
+awful.spawn.easy_async_with_shell("picom", function(out) end)

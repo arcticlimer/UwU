@@ -23,13 +23,12 @@ theme.border_normal = "#000000"
 theme.border_focus  = "#535d6c"
 theme.border_marked = "#91231c"
 
-local taglist_square_size = dpi(4)
-theme.taglist_squares_sel = theme_assets.taglist_squares_sel(
-    taglist_square_size, theme.fg_normal
-)
-theme.taglist_squares_unsel = theme_assets.taglist_squares_unsel(
-    taglist_square_size, theme.fg_normal
-)
+local taglist_square_size = dpi(0)
+
+theme.taglist_fg_focus = "#ef40ff"
+theme.taglist_fg_urgent = "#ff6a0d"
+
+theme.prompt_bg = "#444"
 
 theme.menu_submenu_icon = themes_path.."default/submenu.png"
 theme.menu_height = dpi(20)
@@ -62,10 +61,12 @@ theme.titlebar_maximized_button_focus_inactive  = themes_path.."default/titlebar
 theme.titlebar_maximized_button_normal_active = themes_path.."default/titlebar/maximized_normal_active.png"
 theme.titlebar_maximized_button_focus_active  = themes_path.."default/titlebar/maximized_focus_active.png"
 
-theme.wallpaper = os.getenv("HOME") .. "/ataaa.jpg"
+theme.wallpaper = os.getenv("HOME") .. "/images/wallpapers/purple_sky_wallpaper.jpg"
 
 theme.awesome_icon = theme_assets.awesome_icon(
-    theme.menu_height, theme.bg_focus, theme.fg_focus
+    theme.menu_height,
+    theme.bg_focus,
+    theme.fg_focus
 )
 
 theme.icon_theme = nil

@@ -1,153 +1,54 @@
---[[
-    Criação da wibar
-]]
-
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
 
 local layout_margin = 3
 
--- Widget de relógio
-local text_clock = wibox.widget.textclock("%R")
+-- Import widgets
+local clock_widget = require("widgets/stats/clock")
+local cpu_usage_widget = require("widgets/stats/cpu_usage")
+local cpu_temperature_widget = require("widgets/stats/cpu_temp")
+local memory_usage_widget = require("widgets/stats/memory_usage")
 
-local clock_icon = wibox.widget{
-    markup = "<span color='#cf6dd6'>  </span>",
-    font = "Ionicons 11",
-    align  = 'center',
-    valign = 'center',
-    widget = wibox.widget.textbox
-}
+local create_taglist = require("widgets/taglist")
 
-local clock = wibox.container.margin(wibox.widget({
-    clock_icon, 
-    text_clock,
-    layout = wibox.layout.fixed.horizontal,
-}),10, 10)
+awful.screen.connect_for_each_screen(
+    function(screen)
+        set_wallpaper(screen)
 
--- Widget de Bat
+        -- Tags para cada workspace
+        awful.tag({"1", "2", "3", "4", "5"}, screen, awful.layout.layouts[1])
 
-local bat_text =  wibox.widget.textbox("12%")
+        screen.mytaglist = create_taglist(screen)
 
-local bat_icon = wibox.widget{
-    markup = "<span color='#7dafff'>  </span>",
-    font = "Ionicons 11",
-    align  = 'center',
-    valign = 'center',
-    widget = wibox.widget.textbox
-}
+        -- Prompt para chamar os aplicativos
+        screen.mypromptbox = awful.widget.prompt()
 
-local bat = wibox.container.margin(wibox.widget(
-    {
-        bat_icon,
-        bat_text,
-        layout = wibox.layout.fixed.horizontal,
-    }
-),10, 10)
+        -- Inicio da wibar
+        screen.mywibox =
+            awful.wibar(
+            {
+                position = "top",
+                screen = screen,
+                height = 30
+            }
+        )
 
-awesome.connect_signal("widgets::battery", function(vol, charging)
-    if charging then
-        bat_text.text = "A/C"
-        bat_icon.markup = "<span color='#7dafff'>  </span>"
-    else 
-        bat_text.text = vol .. "%"
-        if vol > 20 then
-            bat_icon.markup = "<span color='#7dafff'>  </span>"
-        else 
-            bat_icon.markup = "<span color='#7dafff'>  </span>"
-        end
+        -- Setup da wibar
+        screen.mywibox:setup {
+            layout = wibox.layout.align.horizontal,
+            {
+                layout = wibox.layout.fixed.horizontal,
+                screen.mytaglist,
+                screen.mypromptbox
+            },
+            nil,
+            {
+                layout = wibox.layout.fixed.horizontal,
+                round_widget(memory_usage_widget, "#111"),
+                round_widget(cpu_temperature_widget, "#111"),
+                round_widget(cpu_usage_widget, "#111"),
+                round_widget(clock_widget, "#111")
+            }
+        }
     end
-end)
-
--- Widget de CPU
-
-local cpu_text =  wibox.widget.textbox("12%")
-
-local cpu_icon = wibox.widget{
-    markup = '<span color="#6dd676">  </span>',
-    font = "Ionicons 11",
-    align  = 'center',
-    valign = 'center',
-    widget = wibox.widget.textbox
-}
-
-local cpu = wibox.container.margin(wibox.widget({
-    cpu_icon,
-    cpu_text,
-    layout = wibox.layout.fixed.horizontal,
-}),10, 10)
-
--- Sinal do uso de cpu usado 
-awesome.connect_signal("widgets::cpu", function(usage)
-    cpu_text.text = tostring( usage ) .. "%"
-end)
-
--- Função para criação do wallpaper para uma tela
-local function set_wallpaper(s)
-    local wallpaper = beautiful.wallpaper
-    if wallpaper then 
-        if type(wallpaper) == "function" then
-            wallpaper = wallpaper(s)
-        end
-        gears.wallpaper.maximized(wallpaper, s, false)
-    end
-end
-
-function round_this_shit(widget, color) 
-    local shape = function(cr,w,h)
-        gears.shape.rounded_rect(cr,w,h,10)
-    end
-    return wibox.container.margin(wibox.container.background(widget, color, shape),0,10,5,0)
-end
-
-local tasklist_buttons = gears.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  c:emit_signal(
-                                                      "request::activate",
-                                                      "tasklist",
-                                                      {raise = true}
-                                                  )
-                                              end
-                                          end),
-                     awful.button({ }, 3, function()
-                                              awful.menu.client_list({ theme = { width = 250 } })
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                          end))
-
-screen.connect_signal("property::geometry", set_wallpaper)
-
-awful.screen.connect_for_each_screen(function(s)
-    set_wallpaper(s)
-
-    -- Tags para cada workspace
-    awful.tag({ "1", "2", "3", "4", "5"}, s, awful.layout.layouts[1])
-
-    -- Prompt para chamar os aplicativos
-    s.mypromptbox = awful.widget.prompt()
-
-    -- Inicio da wibar
-    s.mywibox = awful.wibar({ position = "top", screen = s, height = 30 })
-
-    -- Setup da wibar
-    s.mywibox:setup {
-        layout = wibox.layout.align.horizontal,
-        {
-            layout = wibox.layout.fixed.horizontal,
-            s.mypromptbox,
-        },
-        nil,
-        { 
-            layout = wibox.layout.fixed.horizontal,
-            round_this_shit(bat,"#111"),
-            round_this_shit(cpu,"#111"),
-            round_this_shit(clock,"#111")
-        },
-    }
-end)
+)
