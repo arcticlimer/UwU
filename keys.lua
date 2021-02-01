@@ -8,7 +8,7 @@ root.buttons(gears.table.join(
     awful.button({ }, 5, awful.tag.viewprev)
 ))
 
-function screenshot() awful.util.spawn_with_shell("maim -s -u | xclip -selection clipboard -t image/png -i") end
+function screenshot() awful.util.spawn_with_shell("flameshot gui") end
 function focus_next() awful.client.focus.byidx( 1) end
 function focus_previous() awful.client.focus.byidx(-1) end
 function swap_next() awful.client.swap.byidx(  1)    end
@@ -90,8 +90,8 @@ globalkeys = gears.table.join(
     awful.key({ modkey,           }, "j",      focus_next,{description = "focus next by index", group = "client"}),
     awful.key({ modkey,           }, "k",      focus_previous,   {description = "focus previous by index", group = "client"}),
     -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j",      swap_next,        {description = "swap with next client by index", group = "client"}),
-    awful.key({ modkey, "Shift"   }, "k",      swap_previous,    {description = "swap with previous client by index", group = "client"}),
+    awful.key({ modkey,           }, "Right",  swap_next,        {description = "swap with next client by index", group = "client"}),
+    awful.key({ modkey,           }, "Left",   swap_previous,    {description = "swap with previous client by index", group = "client"}),
     awful.key({ modkey, "Control" }, "j",      focus_next_screen,{description = "focus the next screen", group = "screen"}),
     awful.key({ modkey, "Control" }, "k",      focus_previous_screen, {description = "focus the previous screen", group = "screen"}),
     awful.key({ modkey,           }, "u",      awful.client.urgent.jumpto, {description = "jump to urgent client", group = "client"}),
