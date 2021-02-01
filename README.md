@@ -5,8 +5,7 @@
 
 <img src="https://imgur.com/XWIjse9.png" />
 
-🔧 Requirements
-  - `maim` and `xclip`: Used for screenshots
+- The theme may misbehave if you don't have those programs installed:
+  - `flameshot`: Used for screenshots
+  - `lm_sensors`: Used to show info about CPU temperature
   - `picom`: Compositor, auto started by the theme
-
-> The theme may misbehave if you don't have those programs installed.
