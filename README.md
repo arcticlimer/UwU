@@ -3,7 +3,7 @@
 <p align="center">Just a simple awesome config to make my desktop awesome</p>
 <br>
 
-<img src="https://imgur.com/XWIjse9.png" />
+<img src="https://i.imgur.com/x8dNbcI.png" />
 
 - The theme may misbehave if you don't have those programs installed:
   - `flameshot`: Used for screenshots

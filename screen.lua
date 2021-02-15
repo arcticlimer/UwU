@@ -13,8 +13,6 @@ local create_taglist = require("widgets/taglist")
 
 awful.screen.connect_for_each_screen(
     function(screen)
-        set_wallpaper(screen)
-
         -- Tags para cada workspace
         awful.tag({"1", "2", "3", "4", "5"}, screen, awful.layout.layouts[1])
 
